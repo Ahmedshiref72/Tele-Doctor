@@ -21,10 +21,7 @@ class CheckOutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var roomNameController = TextEditingController();
-    var roomNo = TextEditingController();
-    var enterBedNo = TextEditingController();
-    var enterPricePerNight = TextEditingController();
+
     RoomModel? roomModel;
     AppCubit.get(context).rooms.forEach((element)
     {
