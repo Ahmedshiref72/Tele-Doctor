@@ -10,7 +10,8 @@ class PatientModel
     required this.selectedNurseUID,
     required this.gender,
     required this.id,
-    required this.registeredDate
+    required this.registeredDate,
+    //required this.registeredDate
 
   });
 

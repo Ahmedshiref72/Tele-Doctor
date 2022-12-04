@@ -21,7 +21,10 @@ class CheckOutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    var roomNameController = TextEditingController();
+    var roomNo = TextEditingController();
+    var enterBedNo = TextEditingController();
+    var enterPricePerNight = TextEditingController();
     RoomModel? roomModel;
     AppCubit.get(context).rooms.forEach((element)
     {
@@ -81,7 +84,7 @@ class CheckOutScreen extends StatelessWidget {
                         'Nights Number :${cubit
                         .daysBetween
                       (DateTime.parse('${model.registeredDate}')
-                        ,DateTime.now())} , '
+                        ,DateTime.now())}  '
                         'Patient ID :${model.id} , '
                         'Total Cash :${cubit
                         .daysBetween
@@ -169,8 +172,8 @@ class CheckOutScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${DateFormat("yyyy-MM-dd").format(DateTime.parse(model.registeredDate.toString()))}',
-
+                              '${DateFormat("yyyy-MM-dd")
+                                  .format(DateTime.parse(model.registeredDate.toString()))}',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
@@ -179,7 +182,8 @@ class CheckOutScreen extends StatelessWidget {
                               width: size.width*.08,
                             ),
                             Text(
-                              '${DateFormat("yyyy-MM-dd").format(DateTime.parse(DateTime.now().toString()))}',
+                              '${DateFormat("yyyy-MM-dd")
+                                  .format(DateTime.parse(DateTime.now().toString()))}',
 
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -219,13 +223,13 @@ class CheckOutScreen extends StatelessWidget {
                                   color: Colors.black),
                             ),
                             SizedBox(
-                              width: size.width*.3,
+                              width: size.width*.25,
                             ),
                             Text(
                               '${cubit
                                   .daysBetween
                                 (DateTime.parse('${model.registeredDate}')
-                                  ,DateTime.now())}',
+                                  ,DateTime.now())} Nights',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
@@ -263,7 +267,7 @@ class CheckOutScreen extends StatelessWidget {
                                   color: Colors.black),
                             ),
                             SizedBox(
-                              width: size.width*.17,
+                              width: size.width*.14,
                             ),
                             Text(
                               '${cubit
