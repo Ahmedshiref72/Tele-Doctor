@@ -252,8 +252,8 @@ class AppCubit extends Cubit<AppState> {
         floorNumber: floorNumber,
         bedsNo: bedsNo,
         pricePerNight: pricePerNight,
-      roomType: 'EMPTY',
-      patientList: []
+        roomType: 'EMPTY',
+        patientList: []
 
     );
 
@@ -438,6 +438,38 @@ class AppCubit extends Cubit<AppState> {
   }
 
 
+  List<PatientModel> patients=[];
+
+  Future<void> getAllPatients() async {
+    patients = [];
+
+    emit(GetAllPatientsLoadingState());
+    await FirebaseFirestore.instance.collection('patients').get()
+        .then((value) async {
+
+
+      value.docs.forEach((element) {
+
+
+        patients.add(PatientModel.fromJson(element.data()));
+
+
+      });
+
+      print('patients length${patients.length}');
+      emit(GetAllPatientsSuccessState());
+    })
+        .catchError((onError) {
+      emit(GetAllPatientsErrorState(onError.toString()));
+    });
+  }
+
+
+
+
+
+
+
   String? floorSelectedValue;
 
   void changeSelectedRoom({
@@ -510,27 +542,10 @@ class AppCubit extends Cubit<AppState> {
   }
 
 
-  List <PatientModel> patients=[];
-  void getPAtients() {
-    patients=[];
-    emit(GetPatientsLoadingState());
-    FirebaseFirestore.instance.collection('patients').get()
-        .then((value) async {
-      value.docs.forEach((element)
-      {
-        patients.insert(patients.length,PatientModel.fromJson(element.data()));
-        print(patients[1].name);
-        print(patients[0].name);
-        print('object');
-        emit(GetPatientsSuccessState());
-      });
-
-    })
-        .catchError((onError) {
-      emit(GetPatientsErrorState(onError.toString()));
-    });
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
   }
 
-
 }
-

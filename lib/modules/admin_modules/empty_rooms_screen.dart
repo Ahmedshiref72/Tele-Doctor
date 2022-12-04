@@ -207,7 +207,7 @@ class EmptyRoomsScreen extends StatelessWidget {
 
 Widget roomItem(size,RoomModel roomModel,context,index)=>InkWell(
   onTap: (){
-    navigateTo(context, RoomInformation());
+    navigateTo(context, RoomInformation(roomModel: roomModel,));
 
   },
   child:   Container(
@@ -236,11 +236,11 @@ Widget roomItem(size,RoomModel roomModel,context,index)=>InkWell(
 
         Text('Room #${roomModel.roomNo}',style: TextStyle(fontSize: 16,
 
-        fontWeight:FontWeight.w700,
+            fontWeight:FontWeight.w700,
 
-          color: primaryColor
+            color: primaryColor
 
-    )),
+        )),
 
         SizedBox(height:2,),
 

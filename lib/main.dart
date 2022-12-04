@@ -54,10 +54,10 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (BuildContext context) => AppCubit()
+              ..getAllPatients()
               ..getAllRooms()
               ..getUserData()
-              ..getAllUsers()
-              ..getPAtients(),
+              ..getAllUsers(),
           ),
           BlocProvider(
             create: (BuildContext context) => LoginCubit(),

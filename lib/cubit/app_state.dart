@@ -85,12 +85,13 @@ class GetAllUsersSuccessState extends AppState{}
 class GetAllUsersErrorState extends AppState{
   final error;
   GetAllUsersErrorState(this.error);
+}
 
-}class GetPatientsLoadingState extends AppState{}
+class GetAllPatientsLoadingState extends AppState{}
 
-class GetPatientsSuccessState extends AppState{}
+class GetAllPatientsSuccessState extends AppState{}
 
-class GetPatientsErrorState extends AppState{
+class GetAllPatientsErrorState extends AppState{
   final error;
-  GetPatientsErrorState(this.error);
+  GetAllPatientsErrorState(this.error);
 }

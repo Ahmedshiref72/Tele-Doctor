@@ -44,7 +44,7 @@ class AddNewRoomsScreen extends StatelessWidget {
                 state: ToastStates.ERROR
             );
           }
-          },
+        },
         builder: (context, state) {
           var cubit = AppCubit.get(context);
           Size size = MediaQuery.of(context).size;
@@ -139,7 +139,7 @@ class AddNewRoomsScreen extends StatelessWidget {
                         padding:
                         const EdgeInsets.only(left: 20, right: 20, top: 20),
                         child:defaultButton2(
-                          height: 60,
+                            height: 60,
                             string: 'Add Room',
                             function: ()
                             {

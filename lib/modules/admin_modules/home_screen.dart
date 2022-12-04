@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
               children:
               [
                 const Text('Manage User',style: TextStyle(fontSize: 18,
-                fontWeight:FontWeight.w600
+                    fontWeight:FontWeight.w600
                 ),
                 ),
                 const Text('Accounts',style: TextStyle(fontSize: 18,

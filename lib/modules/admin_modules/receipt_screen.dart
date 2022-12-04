@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:teledoctor/cubit/app_cubit.dart';
 import 'package:teledoctor/models/patient_model.dart';
 import 'package:teledoctor/models/user_model.dart';
@@ -122,20 +123,6 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: blue5,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 25,
-                        )),
-                  ),
                   Padding(
                     padding:
                     EdgeInsets.only(top: 7.0, left: size.width * .1),
@@ -299,19 +286,19 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             .toLowerCase()
                             .startsWith(name.toLowerCase())) {
                           return InkWell(
-                            onTap: (){
-                              navigateTo(context,
-                                  CheckOutScreen(model:model,
-                                  ));
-                            },
-                            child: ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: 1,
-                              itemBuilder:(context,index)=>
-                                  buildItem(context,model,index),
-                              separatorBuilder:(context,index)=>SizedBox(height:8,) ,
-                            )
+                              onTap: (){
+                                navigateTo(context,
+                                    CheckOutScreen(model:model,
+                                    ));
+                              },
+                              child: ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: 1,
+                                itemBuilder:(context,index)=>
+                                    buildItem(context,model,index),
+                                separatorBuilder:(context,index)=>SizedBox(height:8,) ,
+                              )
                           );
                         }
                         return Container();
@@ -436,7 +423,7 @@ Widget buildItem(context,PatientModel model,index)=>InkWell(
 
                   Text(
 
-                    model.registeredDate.toString(),
+                    '${DateFormat("yyyy-MM-dd").format(DateTime.parse(model.registeredDate.toString()))}',
 
                     style: TextStyle(
 
@@ -487,11 +474,8 @@ Widget buildItem(context,PatientModel model,index)=>InkWell(
                         },
 
                       ),
-
                     ],
-
                   ),
-
                 ],
 
               ),
