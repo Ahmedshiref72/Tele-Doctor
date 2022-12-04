@@ -18,60 +18,59 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await CacheHelper.init();
   Widget widget;
-  bool onBoarding =false;
-  if (await CacheHelper.getData(key: 'onBoarding')!=
-      null&&await CacheHelper.getData(key: 'onBoarding')==true) {
-    if (CacheHelper.getData(key: 'uId')!=null) {
-      userType=CacheHelper.getData(key: 'userType');
+  bool onBoarding = false;
+  if (await CacheHelper.getData(key: 'onBoarding') != null &&
+      await CacheHelper.getData(key: 'onBoarding') == true) {
+    if (CacheHelper.getData(key: 'uId') != null) {
+      userType = CacheHelper.getData(key: 'userType');
       print(uId);
       uId = CacheHelper.getData(key: 'uId');
-      widget =HomeLayoutScreen();
+      widget = HomeLayoutScreen();
     } else {
       widget = LoginScreen();
-    }    }
-   else {
-    CacheHelper.saveData(key: 'onBoarding',value: false);
+    }
+  } else {
+    CacheHelper.saveData(key: 'onBoarding', value: false);
     onBoarding = await CacheHelper.getData(key: 'onBoarding');
     widget = OnBoardingScreen();
   }
 
-
-  runApp(MyApp(onBoarding: onBoarding, startWidget: widget,));}
+  runApp(MyApp(
+    onBoarding: onBoarding,
+    startWidget: widget,
+  ));
+}
 
 class MyApp extends StatelessWidget {
   final Widget startWidget;
   final bool onBoarding;
+
   const MyApp({required this.onBoarding, required this.startWidget});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     return MultiBlocProvider(
-
-      providers: [
-        BlocProvider(create: (BuildContext context) =>AppCubit()..getUserData()..getAllRooms(),
-
-        )
-        ,
-        BlocProvider(create: (BuildContext context) =>LoginCubit(),
-        )
-
-      ],
-
-      child:MaterialApp(
-
-            theme: ThemeData(
+        providers: [
+          BlocProvider(
+            create: (BuildContext context) => AppCubit()
+              ..getAllRooms()
+              ..getUserData()
+              ..getAllUsers()
+              ..getPAtients(),
+          ),
+          BlocProvider(
+            create: (BuildContext context) => LoginCubit(),
+          )
+        ],
+        child: MaterialApp(
+          theme: ThemeData(
             textTheme: GoogleFonts.lailaTextTheme(
               Theme.of(context).textTheme,
-        ),),
+            ),
+          ),
           debugShowCheckedModeBanner: false,
-          home:startWidget,
-
-
-    )
-    );
+          home: startWidget,
+        ));
   }
 }
-
-

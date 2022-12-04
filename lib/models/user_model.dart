@@ -10,6 +10,7 @@ class UserModel
     required this.jop,
     required this.password,
     required this.type
+
   });
 
   UserModel.fromJson(Map <String,dynamic> json)
@@ -38,4 +39,5 @@ class UserModel
       'type':type,
     };
   }
+
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teledoctor/models/user_model.dart';
 import 'package:teledoctor/modules/admin_modules/edit_account_screen.dart';
 import 'package:teledoctor/shared/component/components.dart';
 import '../../shared/constants/constants.dart';
@@ -193,13 +194,14 @@ class _EditScreen1State extends State<EditScreen1> {
                 builder: (context, snapshots) {
                   return (snapshots.connectionState == ConnectionState.waiting)
                       ? Center(
-                        child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(),
                   )
                       : ListView.builder(
                       itemCount: snapshots.data!.docs.length,
                       itemBuilder: (context, index) {
                         var data = snapshots.data!.docs[index].data()
                         as Map<String, dynamic>;
+                        UserModel model=UserModel.fromJson(data);
 
                         if (name.isEmpty) {
                           return Container();
@@ -289,10 +291,10 @@ class _EditScreen1State extends State<EditScreen1> {
                         if (data['name']
                             .toString()
                             .toLowerCase()
-                            .startsWith(name.toLowerCase())) {
+                            .startsWith(name.toLowerCase())&&(data['type']=='DOCTOR'||data['type']=='NURSE')) {
                           return InkWell(
                             onTap: (){
-                              navigateTo(context, EditAccountScreen());
+                              navigateTo(context, EditAccountScreen(model:model,));
                             },
                             child: ListTile(
                               title: Text(

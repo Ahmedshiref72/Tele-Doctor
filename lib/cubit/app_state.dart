@@ -32,22 +32,22 @@ class GetAdminsErrorState extends AppState{
   GetAdminsErrorState(this.error);
 }
 
-class UpdateAdminDataLoadingState extends AppState{}
+class UpdateUserDataLoadingState extends AppState{}
 
-class UpdateAdminDataSuccessState extends AppState{}
+class UpdateUserDataSuccessState extends AppState{}
 
-class UpdateAdminDataErrorState extends AppState{
+class UpdateUserDataErrorState extends AppState{
   final error;
-  UpdateAdminDataErrorState(this.error);
+  UpdateUserDataErrorState(this.error);
 }
 
-class DeleteAdminDataLoadingState extends AppState{}
+class DeleteUserDataLoadingState extends AppState{}
 
-class DeleteAdminDataSuccessState extends AppState{}
+class DeleteUserDataSuccessState extends AppState{}
 
-class DeleteAdminDataErrorState extends AppState{
+class DeleteUserDataErrorState extends AppState{
   final error;
-  DeleteAdminDataErrorState(this.error);
+  DeleteUserDataErrorState(this.error);
 }
 
 class BottomNavigationBarChangedState extends AppState{}
@@ -70,3 +70,27 @@ class GetAllRoomsErrorState extends AppState{
 }
 
 class ChangeSelectedRoomState extends AppState{}
+
+class AddNewPatientSuccessState extends AppState{}
+
+class AddNewPatientErrorState extends AppState{
+  final error;
+  AddNewPatientErrorState(this.error);
+}
+
+class GetAllUsersLoadingState extends AppState{}
+
+class GetAllUsersSuccessState extends AppState{}
+
+class GetAllUsersErrorState extends AppState{
+  final error;
+  GetAllUsersErrorState(this.error);
+
+}class GetPatientsLoadingState extends AppState{}
+
+class GetPatientsSuccessState extends AppState{}
+
+class GetPatientsErrorState extends AppState{
+  final error;
+  GetPatientsErrorState(this.error);
+}

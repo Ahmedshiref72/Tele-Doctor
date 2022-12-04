@@ -200,7 +200,7 @@ class RoomInformation extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: 2,
-                      itemBuilder: (context, index) => buildItem(context),
+                      itemBuilder: (context, index) => buildItem(context,index),
                       separatorBuilder: (context, index) => SizedBox(
                         height: 8,
                       ),
@@ -257,9 +257,9 @@ class RoomInformation extends StatelessWidget {
   }
 }
 
-Widget buildItem(context) => InkWell(
+Widget buildItem(context,model) => InkWell(
   onTap: () {
-    navigateTo(context, CheckOutScreen());
+    navigateTo(context, CheckOutScreen(model: model,));
   },
   child: Card(
     color: Colors.grey[100],
@@ -339,7 +339,7 @@ Widget buildItem(context) => InkWell(
                       TextButton(
                         child: Text('Check Out'),
                         onPressed: () {
-                          navigateTo(context, CheckOutScreen());
+                          navigateTo(context, CheckOutScreen(model: model,));
                         },
                       ),
                     ],

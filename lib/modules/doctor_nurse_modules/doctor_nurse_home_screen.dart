@@ -212,29 +212,48 @@ Widget buildItem(context)=>InkWell(
                       FontWeight.w200,
 
                     ),
+
                     maxLines: 1,
+
                     overflow: TextOverflow
+
                         .ellipsis,
+
                   ),
+
                   Row(
+
                     children: [
+
                       Text(
+
                         'Room No: 3',
+
                         style: TextStyle(color:primaryColor),
+
                       ),
+
                       Spacer(),
-                      Text('Active',
-                        style:TextStyle(color: Colors.red[800]
-                      ),
-                      ),
+
+                      Text('Active',style:TextStyle(color: Colors.red[800]),),
+
                     ],
+
                   ),
+
                 ],
+
               ),
+
             ),
+
           ],
+
         ),
+
       ),
+
     ),
+
   ),
 );
