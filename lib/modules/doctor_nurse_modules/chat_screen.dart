@@ -316,7 +316,10 @@ Widget buildMessage(MessageModel model,context,Size size) => Align(
                   ),
                   Row(
                     children: [
-                      Icon(Icons.watch_later),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Icon(Icons.watch_later,size: 11,color: Colors.grey,),
+                      ),
                       Text(
                         '${DateFormat("MM-dd hh:mm").format(DateTime.parse(model.dateTime.toString()))}',
                         style: TextStyle(
@@ -374,7 +377,10 @@ Widget buildMyMessage(MessageModel model,context,Size size) => Align(
                   ),
                   Row(
                     children: [
-                      Icon(Icons.watch_later),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Icon(Icons.watch_later,size: 11,color: Colors.grey,),
+                      ),
                       Text(
                         '${DateFormat("MM-dd hh:mm").format(DateTime.parse(model.dateTime.toString()))}',
                         style: TextStyle(
