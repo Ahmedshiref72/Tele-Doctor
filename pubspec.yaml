@@ -55,6 +55,11 @@ dependencies:
   firestore_search:
   firebase_messaging:
   firebase_core_platform_interface: 4.5.1
+  conditional_builder_null_safety: ^0.0.6
+
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

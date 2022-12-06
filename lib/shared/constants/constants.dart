@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teledoctor/models/recored_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teledoctor/models/user_model.dart';
 import 'dart:ui';
 
@@ -13,7 +13,6 @@ bool? isAdmin=false;
 String? userType;
 AdminModel? adminModel;
 UserModel? userModel;
-
 
 Color blue1 = const Color(0xff253d79);
 Color primaryColor = const Color(0xff004f9a);

@@ -48,6 +48,23 @@ class DoctorAndNurseHomeScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                       ),
                       Spacer(),
+                      InkWell(
+                        onTap: (){},
+                        child: Container(
+                            width:40 ,
+                            height:40 ,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: primaryColor,
+
+                            ),
+                            child: IconButton(onPressed:()
+                            {
+                              cubit.getAllPatients();
+                            },
+
+                                icon: Icon(Icons.refresh,color: Colors.white,))),
+                      ),
                       IconButton(onPressed:()
                       {
                         cubit.logOut(context);
@@ -145,6 +162,7 @@ class DoctorAndNurseHomeScreen extends StatelessWidget {
 
 Widget buildItem(context, PatientModel patient) => InkWell(
   onTap: () {
+    AppCubit.get(context).getAllRecords();
     navigateTo(context, PatientDetailsScreen1(patientModel: patient,));
   },
   child: Card(

@@ -2,14 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:teledoctor/cubit/app_cubit.dart';
 import 'package:teledoctor/models/patient_model.dart';
 import 'package:teledoctor/modules/doctor_nurse_modules/patient_details_1_screen.dart';
 import 'package:teledoctor/shared/component/components.dart';
-import '../../models/user_model.dart';
 import '../../shared/constants/constants.dart';
 import '../../shared/local/shared_preference.dart';
-import '../admin_modules/checkout_screen.dart';
 
 class SearchForPatientScreen extends StatefulWidget {
   const SearchForPatientScreen({Key? key}) : super(key: key);

@@ -1,6 +1,7 @@
 class PatientModel
 {
-  String? name,age,roomNo,selectedDoctorUID,selectedNurseUID,gender,id,registeredDate;
+  String? name,age,roomNo,selectedDoctorUID,selectedNurseUID,gender,id,registeredDate
+  ,temp,suger,pressure;
 
   PatientModel({
     required this.name,
@@ -10,8 +11,10 @@ class PatientModel
     required this.selectedNurseUID,
     required this.gender,
     required this.id,
-    required this.registeredDate,
-    //required this.registeredDate
+    required this.registeredDate ,
+    required this.temp,
+    required this.suger,
+    required this.pressure
 
   });
 
@@ -25,19 +28,26 @@ class PatientModel
     gender =json['gender'];
     id =json['id'];
     registeredDate =json['registeredDate'];
+    selectedNurseUID =json['selectedNurseUID'];
+    suger =json['suger'];
+    temp =json['temp'];
+    pressure =json['pressure'];
   }
 
   Map <String,dynamic> toMap()
   {
     return {
-    'name' :name,
-    'age' :age,
-    'roomNo':roomNo,
-    'selectedDoctorUID':selectedDoctorUID,
-    'selectedNurseUID':selectedNurseUID,
-    'gender' :gender,
-    'id' :id,
-    'registeredDate' :registeredDate,
+      'name' :name,
+      'age' :age,
+      'roomNo':roomNo,
+      'selectedDoctorUID':selectedDoctorUID,
+      'selectedNurseUID':selectedNurseUID,
+      'gender' :gender,
+      'id' :id,
+      'registeredDate' :registeredDate,
+      'suger' :suger,
+      'temp' :temp,
+      'pressure' :pressure,
 
     };
   }

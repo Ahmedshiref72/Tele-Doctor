@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teledoctor/models/notification_model.dart';
 import 'package:teledoctor/models/patient_model.dart';
 import 'package:teledoctor/models/room_model.dart';
 import 'package:teledoctor/modules/doctor_nurse_modules/doctor_nurse_home_screen.dart';
 import '../models/admin_model.dart';
+import '../models/chat_model.dart';
 import '../models/recored_model.dart';
 import '../models/user_model.dart';
 import '../modules/admin_modules/add_patient_screen.dart';
@@ -61,13 +63,13 @@ class AppCubit extends Cubit<AppState> {
 
   void userCreate(
       {required String email,
-      required String name,
-      required String phone,
-      required String? uId,
-      required String id,
-      required String jop,
-      required String type,
-      required String password}) {
+        required String name,
+        required String phone,
+        required String? uId,
+        required String id,
+        required String jop,
+        required String type,
+        required String password}) {
     UserModel model = UserModel(
         uId: uId,
         id: id,
@@ -169,8 +171,8 @@ class AppCubit extends Cubit<AppState> {
 //delete admin data
   Future<void> deleteUserData(
       {required String uId,
-      required String email,
-      required String password}) async {
+        required String email,
+        required String password}) async {
     emit(DeleteUserDataLoadingState());
     FirebaseFirestore.instance
         .collection('admins')
@@ -178,7 +180,7 @@ class AppCubit extends Cubit<AppState> {
         .delete()
         .then((value) async {
       AuthCredential credential =
-          EmailAuthProvider.credential(email: email, password: password);
+      EmailAuthProvider.credential(email: email, password: password);
       await FirebaseAuth.instance.currentUser!
           .reauthenticateWithCredential(credential);
       await FirebaseAuth.instance.currentUser!.delete();
@@ -319,6 +321,8 @@ class AppCubit extends Cubit<AppState> {
     required id,
     required registeredDate,
     required newPatient,
+
+
   }) async {
     patientList = [];
     rooms.forEach((element) {
@@ -359,11 +363,14 @@ class AppCubit extends Cubit<AppState> {
         selectedNurseUID: selectedNurseUID,
         gender: gender,
         id: id,
-        registeredDate: registeredDate);
+        registeredDate: registeredDate,
+        temp: '-',
+        suger: '-',
+        pressure: '-');
 
     try {
       final snapShot =
-          await FirebaseFirestore.instance.collection('patients').doc(id).get();
+      await FirebaseFirestore.instance.collection('patients').doc(id).get();
 
       if (snapShot.exists) {
         emit(AddNewPatientErrorState('This patient is already exist'));
@@ -382,6 +389,13 @@ class AppCubit extends Cubit<AppState> {
             print(patientList);
 
             getAllRooms();
+
+            sendNotification(
+                text: 'Admin Has Added New Patient For You',
+                doctorUID: selectedDoctorUID,
+                nurseUID: selectedNurseUID,
+                patientId: id,
+                sendDate: DateTime.now().toString());
             emit(AddNewPatientSuccessState());
           }).catchError((onError) {
             emit(AddNewPatientErrorState(onError.toString()));
@@ -395,6 +409,37 @@ class AppCubit extends Cubit<AppState> {
     } catch (e) {}
   }
 
+  Future <void> updatePatientData(
+      {
+        required id,
+        required temp,
+        required suger,
+        required pressure,
+        selectedDoctorUID,
+        selectedNurseUID,
+        patientName
+      })
+  async {
+    await FirebaseFirestore.instance
+        .collection('patients')
+        .doc(id)
+        .update({'suger':suger.toString(),'temp':temp.toString(),'pressure':pressure.toString()})
+        .then((value) async {
+
+      sendNotification(
+          text: 'Has updated ${patientName} Rates',
+          doctorUID: selectedDoctorUID,
+          nurseUID: selectedNurseUID,
+          patientId: id,
+          sendDate: DateTime.now().toString());
+      getAllPatients();
+      emit(UpdatePatientRecordSuccessState());
+    }).catchError((onError) {
+      emit(UpdatePatientRecordErrorState(onError.toString()));
+    });
+
+
+  }
   List<PatientModel> patients = [];
 
   Future<void> getAllPatients() async {
@@ -484,24 +529,20 @@ class AppCubit extends Cubit<AppState> {
     return (to.difference(from).inHours / 24).round();
   }
 
-
-  Future<void> addNewRecord({
-    required data,
-    required patientId,
-    required selectedDoctorUID,
-    required selectedNurseUID,
-    required registeredDate,
-
-  }) async {
+  Future<void> addNewRecord(
+      {required data,
+        required patientId,
+        required selectedDoctorUID,
+        required selectedNurseUID,
+        required registeredDate,
+        required nurseName,
+        required patientName}) async {
     RecoredModel model = RecoredModel(
-        data: data,
-
-        patientId: patientId,
+      data: data,
+      patientId: patientId,
       registeredDate: registeredDate,
-        selectedDoctorUID: selectedDoctorUID,
-        selectedNurseUID: selectedNurseUID,
-
-
+      selectedDoctorUID: selectedDoctorUID,
+      selectedNurseUID: selectedNurseUID,
     );
 
     try {
@@ -510,22 +551,26 @@ class AppCubit extends Cubit<AppState> {
           .doc(data)
           .get();
 
-
-        await FirebaseFirestore.instance
-            .collection('records')
-            .doc(data)
-            .set(model.toMap())
-            .then((value) {
-          emit(AddNewRecordSuccessState());
-        }).catchError((onError) {
-          emit(AddNewRecordErrorState(onError.toString()));
-        });
-
-
+      await FirebaseFirestore.instance
+          .collection('records')
+          .doc(data)
+          .set(model.toMap())
+          .then((value) {
+        sendNotification(
+            text: 'Has updated ${patientName} record',
+            doctorUID: selectedDoctorUID,
+            nurseUID: selectedNurseUID,
+            patientId: patientId,
+            sendDate: DateTime.now().toString());
+        emit(AddNewRecordSuccessState());
+      }).catchError((onError) {
+        emit(AddNewRecordErrorState(onError.toString()));
+      });
     } catch (e) {}
   }
 
   List<RecoredModel> records = [];
+
   Future<void> getAllRecords() async {
     records = [];
 
@@ -541,4 +586,137 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
+  Future<void> sendNotification({
+    required String text,
+    required String doctorUID,
+    required String nurseUID,
+    required String patientId,
+    required String sendDate,
+  }) async {
+    NotificationModel model = NotificationModel(
+        text: text,
+        doctorUID: doctorUID,
+        nurseUID: nurseUID,
+        patientId: patientId,
+        sendDate: sendDate);
+
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .doc()
+        .set(model.toMap())
+        .then((value) {
+      emit(SendNotificationSuccessState());
+    }).catchError((onError) {
+      emit(SendNotificationErrorState(onError.toString()));
+    });
+  }
+
+  List<NotificationModel> notifications = [];
+
+  Future<void> getAllNotifications() async {
+    notifications = [];
+    FirebaseFirestore.instance.collection('notifications')
+        .orderBy('sendDate',descending:true)
+        .get().then((value) {
+      value.docs.forEach((element) {
+        notifications.add(NotificationModel.fromJson(element.data()));
+      });
+      emit(GetAllNotificationsSuccessState());
+    }).catchError((onError) {
+      emit(GetAllNotificationsSuccessState());
+    });
+  }
+  List<bool> isOpened=[];
+  Future<void> addToIsOpened(length,value)
+  async {
+    isOpened.insert(isOpened.length,value);
+    if(await CacheHelper.getData(key:'${isOpened.length}')!=null)
+    {
+      CacheHelper.saveData(key:'${isOpened.length}', value: value);
+    }
+    print(isOpened.length);
+
+  }
+
+  void changeNotificationIsOpened(index) {
+    isOpened[index] =true;
+    CacheHelper.saveData(key:'${index}', value: true);
+
+    emit(ChangeNotificationIsOpenedState());
+  }
+
+
+  void sendMessage({
+    required String receiverId,
+    required String dateTime,
+    required String text,
+    required String senderId,
+  }) {
+    MessageModel model = MessageModel(
+      text: text,
+      senderId:senderId,
+      receiverId: receiverId,
+      dateTime: dateTime,
+    );
+
+    // set my chats
+    FirebaseFirestore.instance
+        .collection('admins')
+        .doc(senderId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState(error));
+    });
+
+    // set receiver chats
+    FirebaseFirestore.instance
+        .collection('admins')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(senderId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState(error));
+    });
+  }
+
+
+  List<MessageModel> messages = [];
+
+  void getMessages({
+    required String receiverId,
+    required String senderId,
+
+  }) {
+    FirebaseFirestore.instance
+        .collection('admins')
+        .doc(senderId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+
+      emit(SocialGetMessagesSuccessState());
+    });
+  }
+
+
 }
+
+
+
