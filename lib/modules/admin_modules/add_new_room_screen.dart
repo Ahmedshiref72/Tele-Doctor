@@ -9,11 +9,9 @@ import 'package:teledoctor/shared/component/components.dart';
 import 'package:teledoctor/shared/constants/constants.dart';
 
 class AddNewRoomsScreen extends StatelessWidget {
-  final List<String> floors = [
-    '1',
-    '2',
-  ];
+
   var formKey = GlobalKey<FormState>();
+  var floors = [for(var i=1; i<int.parse(adminModel!.floorNumbers.toString()); i+=1) i];
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +45,13 @@ class AddNewRoomsScreen extends StatelessWidget {
                 state: ToastStates.ERROR
             );
           }
-        },
+          },
         builder: (context, state) {
           var cubit = AppCubit.get(context);
           Size size = MediaQuery.of(context).size;
+
+
+
           return Scaffold(
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -172,7 +173,7 @@ class AddNewRoomsScreen extends StatelessWidget {
                           }
                         },
                         onChanged: (value) {
-                          cubit.changeSelectedRoom(
+                          cubit.changeEmptySelectedRoom(
                               floorSelectedVal: value.toString());
                           floorNumberController.text=value.toString();
                           // floorSelectedValue=value.toString();
@@ -206,8 +207,8 @@ class AddNewRoomsScreen extends StatelessWidget {
                     Padding(
                         padding:
                         const EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child:defaultButton2(
-                            height: 60,
+                        child:!cubit.addRoomIsLoading?defaultButton2(
+                          height: 60,
                             string: 'Add Room',
                             function: ()
                             {
@@ -221,7 +222,7 @@ class AddNewRoomsScreen extends StatelessWidget {
                               }
 
                             }
-                        )
+                        ):CircularProgressIndicator()
 
                     ),
                   ],

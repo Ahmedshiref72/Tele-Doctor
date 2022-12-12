@@ -7,6 +7,7 @@ import 'package:teledoctor/cubit/app_cubit.dart';
 import 'package:teledoctor/cubit/app_state.dart';
 import 'package:teledoctor/models/notification_model.dart';
 import 'package:teledoctor/models/patient_model.dart';
+import 'package:teledoctor/models/record_model.dart';
 import 'package:teledoctor/modules/doctor_nurse_modules/patient_details_1_screen.dart';
 import 'package:teledoctor/shared/component/components.dart';
 import 'package:teledoctor/shared/constants/constants.dart';
@@ -23,7 +24,6 @@ class DoctorAndNurseNotificationScreen extends StatelessWidget {
           var cubit = AppCubit.get(context);
           Size size = MediaQuery.of(context).size;
           String uId = CacheHelper.getData(key: 'uId');
-
           List<NotificationModel> notifications =[];
           UserModel? doctor;
 
@@ -32,7 +32,6 @@ class DoctorAndNurseNotificationScreen extends StatelessWidget {
             {
               if(element1.uId==element2.doctorUID)
               {
-                cubit.addToIsOpened(notifications.length,false);
 
                 notifications.insert(notifications.length,element2);
 
@@ -91,10 +90,10 @@ class DoctorAndNurseNotificationScreen extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: 1,
                       separatorBuilder: (context, index) => SizedBox(
-                        height: 10,
-                      ),
+                            height: 10,
+                          ),
                       itemBuilder: (context, index) =>buildItem(
-                          cubit, notifications, cubit.users, cubit.patients,size)),
+                              cubit, notifications, cubit.users, cubit.patients,size)),
                 ],
               ),
             ),
@@ -133,10 +132,12 @@ Widget buildItem(AppCubit cubit, List<NotificationModel> notifications,
           });
 
           return InkWell(
-            onTap: () {
+            onTap: () async {
+              await CacheHelper.saveData(key:'${index}', value: true);
+
               navigateTo(
                   context, PatientDetailsScreen1(patientModel: patient!));
-              cubit.changeNotificationIsOpened(index);
+
             },
             child: Card(
               elevation: 0,
@@ -150,19 +151,21 @@ Widget buildItem(AppCubit cubit, List<NotificationModel> notifications,
                     children: [
                       Row(
                         children: [
-                          CacheHelper.getData(key:'${index}')==false
-                              ? Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0),
-                            child: Container(
-                              height: 10,
-                              width: 10,
-                              decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius:
-                                  BorderRadius.circular(50)),
-                            ),
-                          )
+
+                          CacheHelper.getData(key:'${index}')!=true
+
+                     ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Container(
+                                    height: 10,
+                                    width: 10,
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                  ),
+                                )
                               : Container(),
                           //image
                           Container(

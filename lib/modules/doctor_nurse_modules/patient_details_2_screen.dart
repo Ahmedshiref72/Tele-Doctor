@@ -251,3 +251,4 @@ class PatientDetailsScreen2 extends StatelessWidget {
   }
 }
 
+

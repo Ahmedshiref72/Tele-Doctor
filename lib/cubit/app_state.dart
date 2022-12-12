@@ -52,6 +52,7 @@ class DeleteUserDataErrorState extends AppState{
 
 class BottomNavigationBarChangedState extends AppState{}
 
+class AddNewRoomLoadingState extends AppState{}
 
 class AddNewRoomSuccessState extends AppState{}
 
@@ -70,6 +71,9 @@ class GetAllRoomsErrorState extends AppState{
 }
 
 class ChangeSelectedRoomState extends AppState{}
+
+class AddNewPatientLoadingState extends AppState{}
+
 
 class AddNewPatientSuccessState extends AppState{}
 
@@ -134,11 +138,23 @@ class GetAllNotificationsErrorState extends AppState{
 }
 
 class ChangeNotificationIsOpenedState extends AppState{}
-class SocialSendMessageSuccessState extends AppState {}
 
-class SocialSendMessageErrorState extends AppState {
+
+class SendMessageSuccessState extends AppState {}
+
+class SendMessageErrorState extends AppState {
   final error;
-  SocialSendMessageErrorState(this.error);
+  SendMessageErrorState(this.error);
 }
 
-class SocialGetMessagesSuccessState extends AppState {}
+class GetMessagesSuccessState extends AppState {}
+
+class CheckOutLoadingState extends AppState {}
+
+class CheckOutSuccessState extends AppState {}
+
+class CheckOutErrorState extends AppState
+{
+  final error;
+  CheckOutErrorState(this.error);
+}

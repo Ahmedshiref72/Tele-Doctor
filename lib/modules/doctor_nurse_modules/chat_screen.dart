@@ -6,21 +6,21 @@ import 'package:teledoctor/cubit/app_cubit.dart';
 import 'package:teledoctor/cubit/app_state.dart';
 import 'package:teledoctor/models/patient_model.dart';
 import 'package:teledoctor/shared/constants/constants.dart';
-import '../../models/chat_model.dart';
 import '../../models/user_model.dart';
+import '../../models/chat_model.dart';
 
 class ChatScreen extends StatelessWidget {
+  final PatientModel patientModel;
+  final UserModel? doctor;
+  final UserModel? nurse;
   var messageController = TextEditingController();
-  UserModel? doctor;
+  ScrollController scrollController = new ScrollController();
 
-  UserModel? nurse;
-
-  ChatScreen({
-    super.key,
-    required this.patientModel,
-  });
-
-  PatientModel patientModel;
+  ChatScreen(
+      {super.key,
+      required this.patientModel,
+      required this.doctor,
+      required this.nurse});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,20 @@ class ChatScreen extends StatelessWidget {
         );
 
         return BlocConsumer<AppCubit, AppState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is SendMessageSuccessState) {
+              messageController.text = '';
+            }
+          },
           builder: (context, state) {
+            String receiverUID = '';
+            if (userModel!.type == 'DOCTOR') {
+              receiverUID = nurse!.uId!;
+            }
+            if (userModel!.type == 'NURSE') {
+              receiverUID = doctor!.uId!;
+            }
             return Scaffold(
-
               body: Column(
                 children: [
                   Padding(
@@ -62,8 +72,8 @@ class ChatScreen extends StatelessWidget {
                               )),
                         ),
                         Padding(
-                          padding:
-                          EdgeInsets.only(top: 7.0, left: size.width * .12,right:20),
+                          padding: EdgeInsets.only(
+                              top: 7.0, left: size.width * .1, right: 20),
                           child: Text(
                             'Chatting Room',
                             style: TextStyle(
@@ -72,7 +82,6 @@ class ChatScreen extends StatelessWidget {
                                 fontSize: 22),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -106,16 +115,27 @@ class ChatScreen extends StatelessWidget {
                                       width: 6,
                                       color: Colors.white,
                                     )),
-                                child: Center(
-                                  child: Image(
-                                    image: AssetImage(
-                                      'images/profile.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                    width: 100,
-                                    height: 100,
-                                  ),
-                                ),
+                                child: userModel!.type == 'Doctor'
+                                    ? Center(
+                                        child: Image(
+                                          image: AssetImage(
+                                            'images/nurse.jpg',
+                                          ),
+                                          fit: BoxFit.fill,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Image(
+                                          image: AssetImage(
+                                            'images/doctor.jpg',
+                                          ),
+                                          fit: BoxFit.fill,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      ),
                               ),
 
                               SizedBox(
@@ -129,43 +149,30 @@ class ChatScreen extends StatelessWidget {
                                     SizedBox(
                                       height: 5,
                                     ),
+                                    userModel!.type == "NURSE"
+                                        ? Text(
+                                            'Dr. ${doctor!.name}',
+                                            style: TextStyle(
+                                              color: primaryColor,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        : Text(
+                                            'Mrs. ${nurse?.name}',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                                color: primaryColor),
+                                          ),
                                     Text(
-                                      '${patientModel.name}',
+                                      'Patient: ${patientModel.name}',
                                       style: TextStyle(
-                                          color: primaryColor,
+                                          color: Colors.grey,
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.bold),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        userModel!.type == "NURSE"
-                                            ? Text(
-                                          'Dr. ${userModel!.name}',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                            : Text(
-                                          'Mrs. ${nurse?.name}',
-                                          style: TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            '#${patientModel.id}',
-                                            style:
-                                            TextStyle(color: Colors.blue),
-                                          ),
-                                        ),
-                                      ],
                                     ),
                                   ],
                                 ),
@@ -185,24 +192,27 @@ class ChatScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ListView.separated(
+                                controller: scrollController,
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  var message = AppCubit.get(context).messages[index];
+                                  var message =
+                                      AppCubit.get(context).messages[index];
 
-                                  if (patientModel.selectedDoctorUID.toString() == message.senderId)
-                                  {
-                                    return buildMessage(message,context, size);
-                                  }
-                                  else if (patientModel.selectedNurseUID.toString() == message.senderId)
-                                  {
-                                    return buildMyMessage(message,context,size);
+                                  if (userModel!.uId.toString() ==
+                                      message.receiverId) {
+                                    return buildMessage(message, context, size);
+                                  } else if (userModel!.uId.toString() ==
+                                      message.senderId) {
+                                    return buildMyMessage(
+                                        message, context, size);
                                   }
                                   return Container();
                                 },
                                 separatorBuilder: (context, index) => SizedBox(
                                   height: 15.0,
                                 ),
-                                itemCount: AppCubit.get(context).messages.length,
+                                itemCount:
+                                    AppCubit.get(context).messages.length,
                               ),
                             ),
                             Container(
@@ -227,7 +237,8 @@ class ChatScreen extends StatelessWidget {
                                         controller: messageController,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'type your message here ...',
+                                          hintText:
+                                              'type your message here ...',
                                         ),
                                       ),
                                     ),
@@ -237,14 +248,22 @@ class ChatScreen extends StatelessWidget {
                                     color: primaryColor,
                                     child: MaterialButton(
                                       onPressed: () {
-                                        AppCubit.get(context).sendMessage(
-                                          senderId: patientModel.selectedNurseUID
-                                              .toString(),
-                                          receiverId: patientModel.selectedDoctorUID
-                                              .toString(),
-                                          dateTime: DateTime.now().toString(),
-                                          text: messageController.text,
-                                        );
+                                        if (messageController.text != '') {
+                                          AppCubit.get(context).sendMessage(
+                                            patientID: patientModel.id.toString(),
+                                            senderId:
+                                                userModel!.uId!.toString(),
+                                            receiverId: receiverUID.toString(),
+                                            dateTime: DateTime.now().toString(),
+                                            text: messageController.text,
+                                          );
+                                          scrollController.animateTo(
+                                            scrollController.position.maxScrollExtent,
+                                            curve: Curves.easeOut,
+                                            duration: const Duration(
+                                                milliseconds: 300),
+                                          );
+                                        }
                                       },
                                       minWidth: 1.0,
                                       child: Icon(
@@ -275,7 +294,7 @@ class ChatScreen extends StatelessWidget {
   }
 }
 
-Widget buildMessage(MessageModel model,context,Size size) => Align(
+Widget buildMessage(MessageModel model, context, Size size) => Align(
       alignment: AlignmentDirectional.centerStart,
       child: Padding(
         padding: const EdgeInsets.only(right: 80.0),
@@ -296,9 +315,9 @@ Widget buildMessage(MessageModel model,context,Size size) => Align(
             children: [
               Flexible(
                 child: Container(
-                  width: size.width*3,
+                  width: size.width * 3,
                   child: Padding(
-                    padding:  EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       '${model.text}',
                       style: Theme.of(context).textTheme.bodyText1,
@@ -307,8 +326,6 @@ Widget buildMessage(MessageModel model,context,Size size) => Align(
                   ),
                 ),
               ),
-
-
               Column(
                 children: [
                   const SizedBox(
@@ -318,13 +335,15 @@ Widget buildMessage(MessageModel model,context,Size size) => Align(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(Icons.watch_later,size: 11,color: Colors.grey,),
+                        child: Icon(
+                          Icons.watch_later,
+                          size: 11,
+                          color: Colors.grey,
+                        ),
                       ),
                       Text(
                         '${DateFormat("MM-dd hh:mm").format(DateTime.parse(model.dateTime.toString()))}',
-                        style: TextStyle(
-                            fontSize: 10
-                        ),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -336,7 +355,7 @@ Widget buildMessage(MessageModel model,context,Size size) => Align(
       ),
     );
 
-Widget buildMyMessage(MessageModel model,context,Size size) => Align(
+Widget buildMyMessage(MessageModel model, context, Size size) => Align(
       alignment: AlignmentDirectional.centerEnd,
       child: Padding(
         padding: const EdgeInsets.only(left: 80.0),
@@ -353,13 +372,13 @@ Widget buildMyMessage(MessageModel model,context,Size size) => Align(
             horizontal: 10.0,
           ),
           child: Row(
-           crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Flexible(
                 child: Container(
-                  width: size.width*3,
+                  width: size.width * 3,
                   child: Padding(
-                    padding:  EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       '${model.text}',
                       style: Theme.of(context).textTheme.bodyText1,
@@ -368,8 +387,6 @@ Widget buildMyMessage(MessageModel model,context,Size size) => Align(
                   ),
                 ),
               ),
-
-
               Column(
                 children: [
                   const SizedBox(
@@ -379,13 +396,15 @@ Widget buildMyMessage(MessageModel model,context,Size size) => Align(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(Icons.watch_later,size: 11,color: Colors.grey,),
+                        child: Icon(
+                          Icons.watch_later,
+                          size: 11,
+                          color: Colors.grey,
+                        ),
                       ),
                       Text(
                         '${DateFormat("MM-dd hh:mm").format(DateTime.parse(model.dateTime.toString()))}',
-                        style: TextStyle(
-                            fontSize: 10
-                        ),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),

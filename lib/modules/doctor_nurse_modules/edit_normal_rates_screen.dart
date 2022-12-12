@@ -80,7 +80,7 @@ class EditNormalRatesScreen extends StatelessWidget {
                       ),
                       Padding(
                         padding:
-                        EdgeInsets.only(top: 7.0, left: size.width * .07),
+                            EdgeInsets.only(top: 7.0, left: size.width * .07),
                         child: Text(
                           'Edit Normal Rates',
                           style: TextStyle(
@@ -129,13 +129,13 @@ class EditNormalRatesScreen extends StatelessWidget {
                           function: () {
                             if (formKey.currentState!.validate()) {
                               cubit.updatePatientData(
-                                  id: patient.id,
+                                id: patient.id,
                                   suger: sugerController.text,
                                   temp: tempController.text,
                                   pressure: pressureController.text,
-                                  selectedDoctorUID:patient.selectedDoctorUID ,
-                                  selectedNurseUID:patient.selectedNurseUID,
-                                  patientName: patient.name
+                                selectedDoctorUID:patient.selectedDoctorUID ,
+                                selectedNurseUID:patient.selectedNurseUID,
+                                patientName: patient.name
 
                               );
 

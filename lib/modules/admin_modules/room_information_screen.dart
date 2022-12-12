@@ -247,22 +247,18 @@ class RoomInformation extends StatelessWidget {
                                 height: size.height * .08,
                               ),
                             ),
-                            SizedBox(
-                              height:2,
-                            ),
+                            SizedBox(height:2,),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(' Add New Patient',style: TextStyle(fontSize: 15,
                                     fontWeight:FontWeight.bold,
                                     color: blue3
-                                ),
-                                ),
+                                )),
                                 Text(' Click to add patient in this room',style: TextStyle(fontSize: 15,
                                     fontWeight:FontWeight.w500,
                                     color: Colors.grey
-                                ),
-                                ),
+                                )),
                               ],
                             ),
                           ],

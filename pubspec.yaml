@@ -47,6 +47,8 @@ dependencies:
   dropdown_button2:
   intl:
   qr_flutter: ^4.0.0
+  conditional_builder_null_safety: ^0.0.6
+
   #FIREBASE
   firebase_core:
   firebase_auth:
@@ -55,14 +57,14 @@ dependencies:
   firestore_search:
   firebase_messaging:
   firebase_core_platform_interface: 4.5.1
-  conditional_builder_null_safety: ^0.0.6
-
-
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons:
+flutter_icons:
+  android: true
+  image_path: "images/appLogo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

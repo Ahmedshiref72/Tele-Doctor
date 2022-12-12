@@ -37,11 +37,11 @@ class PatientModel
   Map <String,dynamic> toMap()
   {
     return {
-      'name' :name,
-      'age' :age,
-      'roomNo':roomNo,
-      'selectedDoctorUID':selectedDoctorUID,
-      'selectedNurseUID':selectedNurseUID,
+    'name' :name,
+    'age' :age,
+    'roomNo':roomNo,
+    'selectedDoctorUID':selectedDoctorUID,
+    'selectedNurseUID':selectedNurseUID,
       'gender' :gender,
       'id' :id,
       'registeredDate' :registeredDate,

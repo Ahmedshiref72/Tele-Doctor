@@ -10,9 +10,6 @@ import 'package:teledoctor/shared/component/components.dart';
 import '../../shared/constants/constants.dart';
 import 'checkout_screen.dart';
 
-
-
-
 class ReceiptScreen extends StatefulWidget {
   const ReceiptScreen({Key? key}) : super(key: key);
 
@@ -23,310 +20,390 @@ class ReceiptScreen extends StatefulWidget {
 class _ReceiptScreenState extends State<ReceiptScreen> {
   String name = "";
 
+  /*List<Map<String, dynamic>> data = [
+    {
+      'name': 'John',
+      'image':
+      'https://i.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U',
+      'email': 'john@gmail.com'
+    },
+    {
+      'name': 'Eric',
+      'image':
+      'https://i.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI',
+      'email': 'eric@gmail.com'
+    },
+    {
+      'name': 'Mark',
+      'image':
+      'https://i.picsum.photos/id/449/200/300.jpg?grayscale&hmac=GcAk7XLOGeBrqzrEpBjAzBcZFJ9bvyMwvL1QENQ23Zc',
+      'email': 'mark@gmail.com'
+    },
+    {
+      'name': 'Ela',
+      'image':
+      'https://i.picsum.photos/id/3/200/300.jpg?blur=2&hmac=CgtEzNwC4BLEa1z5r0oGOsZPj5wJlqjU615MLuFillY',
+      'email': 'ela@gmail.com'
+    },
+    {
+      'name': 'Sue',
+      'image':
+      'https://i.picsum.photos/id/497/200/300.jpg?hmac=IqTAOsl408FW-5QME1woScOoZJvq246UqZGGR9UkkkY',
+      'email': 'sue@gmail.com'
+    },
+    {
+      'name': 'Lothe',
+      'image':
+      'https://i.picsum.photos/id/450/200/300.jpg?hmac=EAnz3Z3i5qXfaz54l0aegp_-5oN4HTwiZG828ZGD7GM',
+      'email': 'lothe@gmail.com'
+    },
+    {
+      'name': 'Alyssa',
+      'image':
+      'https://i.picsum.photos/id/169/200/200.jpg?hmac=MquoCIcsCP_IxfteFmd8LfVF7NCoRre282nO9gVD0Yc',
+      'email': 'Alyssa@gmail.com'
+    },
+    {
+      'name': 'Nichols',
+      'image':
+      'https://i.picsum.photos/id/921/200/200.jpg?hmac=6pwJUhec4NqIAFxrha-8WXGa8yI1pJXKEYCWMSHroSU',
+      'email': 'Nichols@gmail.com'
+    },
+    {
+      'name': 'Welch',
+      'image':
+      'https://i.picsum.photos/id/845/200/200.jpg?hmac=KMGSD70gM0xozvpzPM3kHIwwA2TRlVQ6d2dLW_b1vDQ',
+      'email': 'Welch@gmail.com'
+    },
+    {
+      'name': 'Delacruz',
+      'image':
+      'https://i.picsum.photos/id/250/200/200.jpg?hmac=23TaEG1txY5qYZ70amm2sUf0GYKo4v7yIbN9ooyqWzs',
+      'email': 'Delacruz@gmail.com'
+    },
+    {
+      'name': 'Tania',
+      'image':
+      'https://i.picsum.photos/id/237/200/200.jpg?hmac=zHUGikXUDyLCCmvyww1izLK3R3k8oRYBRiTizZEdyfI',
+      'email': 'Tania@gmail.com'
+    },
+    {
+      'name': 'Jeanie',
+      'image':
+      'https://i.picsum.photos/id/769/200/200.jpg?hmac=M55kAfuYOrcJ8a49hBRDhWtVLbJo88Y76kUz323SqLU',
+      'email': 'Jeanie@gmail.com'
+    }
+  ];
+  addData() async {
+    for (var element in data) {
+      FirebaseFirestore.instance.collection('users').add(element);
+    }
+    print('all data added');
+  }*/
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
+    //addData();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        body:
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                    EdgeInsets.only(top: 7.0, left: size.width * .1),
-                    child: Text(
-                      'Check Out ',
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: '    Search... ',
-                  suffixIcon: Icon(
-                    Icons.search,
-                  ),
-                  suffixStyle: TextStyle(
-                      color: primaryColor
-                  ),
-                  suffixIconColor:primaryColor ,
-
-                  labelStyle: GoogleFonts.laila(
-                    fontSize: 22,
-                    color:primaryColor,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(
-                      color:primaryColor,
-                      width:2,
-                    ),
-                  ),
-                  focusedBorder:OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(
-                      color:primaryColor,
-                      width:3,
-                    ),
-                  ),
+        body: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 7.0, left: size.width * .1),
+                child: Text(
+                  'Check Out ',
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 22),
                 ),
-
-                onChanged: (val) {
-                  setState(() {
-                    name = val;
-                  });
-                },
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: '    Search... ',
+              suffixIcon: Icon(
+                Icons.search,
+              ),
+              suffixStyle: TextStyle(color: primaryColor),
+              suffixIconColor: primaryColor,
+              labelStyle: GoogleFonts.laila(
+                fontSize: 22,
+                color: primaryColor,
+                fontStyle: FontStyle.italic,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                  color: primaryColor,
+                  width: 2,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                  color: primaryColor,
+                  width: 3,
+                ),
               ),
             ),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('patients').snapshots(),
-                builder: (context, snapshots) {
-                  return (snapshots.connectionState == ConnectionState.waiting)
-                      ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                      : ListView.builder(
+            onChanged: (val) {
+              setState(() {
+                name = val;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('patients').snapshots(),
+            builder: (context, snapshots) {
+              return (snapshots.connectionState == ConnectionState.waiting)
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
                       itemCount: snapshots.data!.docs.length,
                       itemBuilder: (context, index) {
                         var data = snapshots.data!.docs[index].data()
-                        as Map<String, dynamic>;
-                        PatientModel model=PatientModel.fromJson(data);
-
-
+                            as Map<String, dynamic>;
+                        PatientModel model = PatientModel.fromJson(data);
 
                         if (name.isEmpty) {
                           return Container();
+                          /*InkWell(
+                          onTap: (){
+                            navigateTo(context, EditAccountScreen());
+                          },
+                          child: Card(
+                            color: Colors.grey[100],
+
+                            elevation: 5,
+
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(15))),
+
+                            //  color: Colors.blue,
+
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 12,
+                                left: 12,
+                              ),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    //image
+                                    Container(
+                                      width: 80,
+                                      height: 85,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(6),
+                                          border: Border.all(
+                                            width: 6,
+                                            color: Colors.white,
+                                          )),
+                                      child: Center(
+                                        child: Image(
+                                          image: AssetImage('images/profile.png'
+                                          ),
+                                          fit: BoxFit.fill,
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            data['name'],
+                                            style: TextStyle(
+                                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            data['email'],
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 13.0,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          );*/
 
                         }
-                        if (
-                        data['name']
+                        if (data['name']
                             .toString()
                             .toLowerCase()
                             .startsWith(name.toLowerCase())) {
                           return InkWell(
-                              onTap: (){
-                                navigateTo(context,
-                                    CheckOutScreen(model:model,
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    CheckOutScreen(
+                                      model: model,
                                     ));
                               },
                               child: ListView.separated(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: 1,
-                                itemBuilder:(context,index)=>
-                                    buildItem(context,model,index),
-                                separatorBuilder:(context,index)=>SizedBox(height:8,) ,
-                              )
-                          );
+                                itemBuilder: (context, index) =>
+                                    buildItem(context, model, index),
+                                separatorBuilder: (context, index) => SizedBox(
+                                  height: 8,
+                                ),
+                              ));
                         }
                         return Container();
                       });
-                },
-              ),
-            ),
-          ],
-        ));
+            },
+          ),
+        ),
+      ],
+    ));
   }
 }
 
-Widget buildItem(context,PatientModel model,index)=>InkWell(
-  onTap: (){
-    navigateTo(context,
-        CheckOutScreen(model:model,
-        ));
-  },
-  child:   Card(
-    color: Colors.grey[100],
+Widget buildItem(context, PatientModel model, index) => InkWell(
+      onTap: () {
+        navigateTo(
+            context,
+            CheckOutScreen(
+              model: model,
+            ));
+      },
+      child: Card(
+        color: Colors.grey[100],
 
-    elevation: 5,
+        elevation: 5,
 
-    shape: RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15))),
 
-        borderRadius: BorderRadius.all(
+        //  color: Colors.blue,
 
-            Radius.circular(15))),
-
-    //  color: Colors.blue,
-
-    child: Padding(
-
-      padding: const EdgeInsets.only(
-
-        right: 12, left:12,),
-
-      child: Container(
-
-        child: Row(
-
-          children: [
-            //image
-            Container(
-
-              width:80 ,
-
-              height:85 ,
-
-              decoration: BoxDecoration(
-
-                  borderRadius: BorderRadius.circular(6),
-
-                  border: Border.all(
-
-                    width: 6,
-
-                    color:Colors.white,
-
-                  )
-
-              ),
-
-              child:Center(
-
-                child: Image(image: AssetImage('images/profile.jpeg',),
-                  fit: BoxFit.fill,
-
-                  width:100 ,
-
-                  height:100 ,
-
+        child: Padding(
+          padding: const EdgeInsets.only(
+            right: 12,
+            left: 12,
+          ),
+          child: Container(
+            child: Row(
+              children: [
+                //image
+                Container(
+                  width: 80,
+                  height: 85,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        width: 6,
+                        color: Colors.white,
+                      )),
+                  child: Center(
+                    child: Image(
+                      image: AssetImage(
+                        'images/profile.jpeg',
+                      ),
+                      fit: BoxFit.fill,
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
                 ),
 
-              ),
+                SizedBox(
+                  width: 10.0,
+                ),
 
-            ),
-
-            SizedBox(
-
-              width: 10.0,
-
-            ),
-
-            Expanded(
-
-              child: Column(
-
-                crossAxisAlignment:
-
-                CrossAxisAlignment.start,
-
-                children: [
-
-                  SizedBox(
-
-                    height: 5,
-
-                  ),
-
-                  Text(
-
-                    model.name.toString(),
-
-                    style: TextStyle(
-
-                        fontSize: 16.0,
-
-                        fontWeight:
-
-                        FontWeight
-
-                            .bold),
-
-                    maxLines: 1,
-
-                    overflow: TextOverflow
-
-                        .ellipsis,
-
-                  ),
-
-                  Text(
-
-                    '${DateFormat("yyyy-MM-dd").format(DateTime.parse(model.registeredDate.toString()))}',
-
-                    style: TextStyle(
-
-                      color: Colors.grey,
-
-                      fontSize: 13.0,
-
-                      fontWeight:
-
-                      FontWeight.w200,
-
-                    ),
-
-                    maxLines: 1,
-
-                    overflow: TextOverflow
-
-                        .ellipsis,
-
-                  ),
-
-                  Row(
-
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      Text(
-
-                      ' Room No : ${model.roomNo.toString()}',
-
-                        style: TextStyle(color:primaryColor),
-
+                      SizedBox(
+                        height: 5,
                       ),
-
-                      Spacer(),
-
-                      TextButton(
-
-                        child:
-
-                        Text('Check Out'),
-
-                        onPressed: () {
-
-                          navigateTo(context,
-                              CheckOutScreen(model:model,
-                              ));
-
-                        },
-
+                      Text(
+                        model.name.toString(),
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${DateFormat("yyyy-MM-dd").format(DateTime.parse(model.registeredDate.toString()))}',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w200,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            model.roomNo.toString(),
+                            style: TextStyle(color: primaryColor),
+                          ),
+                          Spacer(),
+                          TextButton(
+                            child: Text('Check Out'),
+                            onPressed: () {
+                              navigateTo(
+                                  context,
+                                  CheckOutScreen(
+                                    model: model,
+                                  ));
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-
-              ),
-
+                ),
+              ],
             ),
-
-          ],
-
+          ),
         ),
-
       ),
-
-    ),
-
-  ),
-);
+    );

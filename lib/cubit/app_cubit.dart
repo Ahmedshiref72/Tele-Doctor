@@ -3,18 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:teledoctor/models/notification_model.dart';
 import 'package:teledoctor/models/patient_model.dart';
 import 'package:teledoctor/models/room_model.dart';
 import 'package:teledoctor/modules/doctor_nurse_modules/doctor_nurse_home_screen.dart';
 import '../models/admin_model.dart';
-import '../models/chat_model.dart';
-import '../models/recored_model.dart';
+import '../models/record_model.dart';
 import '../models/user_model.dart';
 import '../modules/admin_modules/add_patient_screen.dart';
 import '../modules/admin_modules/home_screen.dart';
 import '../modules/admin_modules/profile_screen.dart';
 import '../modules/admin_modules/receipt_screen.dart';
+import '../models/chat_model.dart';
 import '../modules/doctor_nurse_modules/doctor_nurse_notification_screen.dart';
 import '../modules/doctor_nurse_modules/doctor_nurse_profile_screen.dart';
 import '../modules/doctor_nurse_modules/search_for_petient_screen.dart';
@@ -63,13 +64,13 @@ class AppCubit extends Cubit<AppState> {
 
   void userCreate(
       {required String email,
-        required String name,
-        required String phone,
-        required String? uId,
-        required String id,
-        required String jop,
-        required String type,
-        required String password}) {
+      required String name,
+      required String phone,
+      required String? uId,
+      required String id,
+      required String jop,
+      required String type,
+      required String password}) {
     UserModel model = UserModel(
         uId: uId,
         id: id,
@@ -84,6 +85,7 @@ class AppCubit extends Cubit<AppState> {
         .doc(uId)
         .set(model.toMap())
         .then((value) {
+      getAllUsers();
       emit(CreateUserSuccessState());
     }).catchError((onError) {
       emit(CreateUserErrorState(onError.toString()));
@@ -171,8 +173,8 @@ class AppCubit extends Cubit<AppState> {
 //delete admin data
   Future<void> deleteUserData(
       {required String uId,
-        required String email,
-        required String password}) async {
+      required String email,
+      required String password}) async {
     emit(DeleteUserDataLoadingState());
     FirebaseFirestore.instance
         .collection('admins')
@@ -180,7 +182,7 @@ class AppCubit extends Cubit<AppState> {
         .delete()
         .then((value) async {
       AuthCredential credential =
-      EmailAuthProvider.credential(email: email, password: password);
+          EmailAuthProvider.credential(email: email, password: password);
       await FirebaseAuth.instance.currentUser!
           .reauthenticateWithCredential(credential);
       await FirebaseAuth.instance.currentUser!.delete();
@@ -229,6 +231,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   bool? isExist = false;
+  bool addRoomIsLoading=false;
 
   Future<void> addNewRoom({
     required roomNo,
@@ -236,6 +239,8 @@ class AppCubit extends Cubit<AppState> {
     required bedsNo,
     required pricePerNight,
   }) async {
+    emit(AddNewRoomLoadingState());
+    addRoomIsLoading=true;
     RoomModel model = RoomModel(
         roomNo: roomNo,
         floorNumber: floorNumber,
@@ -251,6 +256,7 @@ class AppCubit extends Cubit<AppState> {
           .get();
 
       if (snapShot.exists) {
+        addRoomIsLoading=false;
         emit(AddNewRoomErrorState('This room is already exist'));
 
         isExist = false;
@@ -260,9 +266,14 @@ class AppCubit extends Cubit<AppState> {
             .doc(roomNo)
             .set(model.toMap())
             .then((value) {
+
           emit(AddNewRoomSuccessState());
+          addRoomIsLoading=false;
+
         }).catchError((onError) {
           emit(AddNewRoomErrorState(onError.toString()));
+          addRoomIsLoading=false;
+
         });
         isExist = true;
       }
@@ -270,39 +281,16 @@ class AppCubit extends Cubit<AppState> {
   }
 
   List<RoomModel> rooms = [];
-  List<RoomModel> floorNumber1 = [];
-  List<RoomModel> floorNumber2 = [];
-  List<RoomModel> fullRooms1 = [];
-  List<RoomModel> fullRooms2 = [];
 
   Future<void> getAllRooms() async {
     rooms = [];
-    floorNumber1 = [];
-    floorNumber2 = [];
-    fullRooms1 = [];
-    fullRooms2 = [];
 
     emit(GetAllRoomsLoadingState());
     FirebaseFirestore.instance.collection('rooms').get().then((value) async {
       value.docs.forEach((element) {
         rooms.add(RoomModel.fromJson(element.data()));
       });
-      rooms.forEach((element) {
-        if (element.floorNumber.toString() == '1' &&
-            element.roomType!.toUpperCase().toString() == 'EMPTY') {
-          floorNumber1.add(element);
-        } else if (element.floorNumber.toString() == '2' &&
-            element.roomType!.toUpperCase().toString() == 'EMPTY') {
-          floorNumber2.add(element);
-        } else if (element.floorNumber.toString() == '1' &&
-            element.roomType!.toUpperCase().toString() == 'FULL') {
-          fullRooms1.add(element);
-        } else if (element.floorNumber.toString() == '2' &&
-            element.roomType!.toUpperCase().toString() == 'FULL') {
-          fullRooms2.add(element);
-        }
-      });
-      print(floorNumber1[0].roomType);
+
       emit(GetAllRoomsSuccessState());
     }).catchError((onError) {
       emit(GetAllRoomsErrorState(onError.toString()));
@@ -310,6 +298,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   List patientList = [];
+  bool addPatientIsLoading=false;
 
   Future<void> addNewPatient({
     required name,
@@ -321,9 +310,10 @@ class AppCubit extends Cubit<AppState> {
     required id,
     required registeredDate,
     required newPatient,
-
-
   }) async {
+    emit(AddNewPatientLoadingState());
+
+    addPatientIsLoading=true;
     patientList = [];
     rooms.forEach((element) {
       if (element.roomType.toString().toUpperCase() == 'EMPTY' &&
@@ -370,9 +360,10 @@ class AppCubit extends Cubit<AppState> {
 
     try {
       final snapShot =
-      await FirebaseFirestore.instance.collection('patients').doc(id).get();
+          await FirebaseFirestore.instance.collection('patients').doc(id).get();
 
       if (snapShot.exists) {
+        addPatientIsLoading=false;
         emit(AddNewPatientErrorState('This patient is already exist'));
 
         isExist = false;
@@ -396,11 +387,15 @@ class AppCubit extends Cubit<AppState> {
                 nurseUID: selectedNurseUID,
                 patientId: id,
                 sendDate: DateTime.now().toString());
+            addPatientIsLoading=false;
+
             emit(AddNewPatientSuccessState());
           }).catchError((onError) {
+            addPatientIsLoading=false;
             emit(AddNewPatientErrorState(onError.toString()));
           });
         }).catchError((onError) {
+          addPatientIsLoading=false;
           emit(AddNewPatientErrorState(onError.toString()));
         });
 
@@ -409,23 +404,19 @@ class AppCubit extends Cubit<AppState> {
     } catch (e) {}
   }
 
-  Future <void> updatePatientData(
-      {
-        required id,
-        required temp,
-        required suger,
-        required pressure,
-        selectedDoctorUID,
-        selectedNurseUID,
-        patientName
-      })
-  async {
-    await FirebaseFirestore.instance
-        .collection('patients')
-        .doc(id)
-        .update({'suger':suger.toString(),'temp':temp.toString(),'pressure':pressure.toString()})
-        .then((value) async {
-
+  Future<void> updatePatientData(
+      {required id,
+      required temp,
+      required suger,
+      required pressure,
+      selectedDoctorUID,
+      selectedNurseUID,
+      patientName}) async {
+    await FirebaseFirestore.instance.collection('patients').doc(id).update({
+      'suger': suger.toString(),
+      'temp': temp.toString(),
+      'pressure': pressure.toString()
+    }).then((value) async {
       sendNotification(
           text: 'Has updated ${patientName} Rates',
           doctorUID: selectedDoctorUID,
@@ -437,9 +428,8 @@ class AppCubit extends Cubit<AppState> {
     }).catchError((onError) {
       emit(UpdatePatientRecordErrorState(onError.toString()));
     });
-
-
   }
+
   List<PatientModel> patients = [];
 
   Future<void> getAllPatients() async {
@@ -455,17 +445,42 @@ class AppCubit extends Cubit<AppState> {
       });
 
       print('patients length${patients.length}');
+      getAllRecords();
       emit(GetAllPatientsSuccessState());
     }).catchError((onError) {
       emit(GetAllPatientsErrorState(onError.toString()));
     });
   }
 
-  String? floorSelectedValue;
+  String? emptyFloorSelectedValue;
+  List<RoomModel> emptyRoomsInFloor = [];
 
-  void changeSelectedRoom({required floorSelectedVal}) {
-    floorSelectedValue = floorSelectedVal;
-    print(floorSelectedValue);
+  Future<void> changeEmptySelectedRoom({required floorSelectedVal}) async {
+    emptyRoomsInFloor = [];
+    emptyFloorSelectedValue = floorSelectedVal;
+    rooms.forEach((element) {
+      if (element.floorNumber == floorSelectedVal &&
+          element.roomType.toString().toUpperCase() == 'EMPTY') {
+        emptyRoomsInFloor.add(element);
+      }
+    });
+    print(emptyFloorSelectedValue);
+    emit(ChangeSelectedRoomState());
+  }
+
+  String? fullFloorSelectedValue;
+  List<RoomModel> fullRoomsInFloor = [];
+
+  Future<void> changeFullSelectedRoom({required floorSelectedVal}) async {
+    fullRoomsInFloor = [];
+    fullFloorSelectedValue = floorSelectedVal;
+    rooms.forEach((element) {
+      if (element.floorNumber == floorSelectedVal &&
+          element.roomType.toString().toUpperCase() == 'FULL') {
+        fullRoomsInFloor.add(element);
+      }
+    });
+    print(fullFloorSelectedValue);
     emit(ChangeSelectedRoomState());
   }
 
@@ -487,6 +502,9 @@ class AppCubit extends Cubit<AppState> {
 
   void changeBottomNav(int index) {
     currentIndex = index;
+    getAllPatients();
+    getAllRooms();
+
     emit(BottomNavigationBarChangedState());
   }
 
@@ -531,12 +549,12 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> addNewRecord(
       {required data,
-        required patientId,
-        required selectedDoctorUID,
-        required selectedNurseUID,
-        required registeredDate,
-        required nurseName,
-        required patientName}) async {
+      required patientId,
+      required selectedDoctorUID,
+      required selectedNurseUID,
+      required registeredDate,
+      required nurseName,
+      required patientName}) async {
     RecoredModel model = RecoredModel(
       data: data,
       patientId: patientId,
@@ -615,48 +633,31 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> getAllNotifications() async {
     notifications = [];
-    FirebaseFirestore.instance.collection('notifications')
-        .orderBy('sendDate',descending:true)
-        .get().then((value) {
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .orderBy('sendDate', descending: true)
+        .snapshots()
+        .listen((value) {
       value.docs.forEach((element) {
         notifications.add(NotificationModel.fromJson(element.data()));
       });
       emit(GetAllNotificationsSuccessState());
-    }).catchError((onError) {
-      emit(GetAllNotificationsSuccessState());
     });
   }
-  List<bool> isOpened=[];
-  Future<void> addToIsOpened(length,value)
-  async {
-    isOpened.insert(isOpened.length,value);
-    if(await CacheHelper.getData(key:'${isOpened.length}')!=null)
-    {
-      CacheHelper.saveData(key:'${isOpened.length}', value: value);
-    }
-    print(isOpened.length);
-
-  }
-
-  void changeNotificationIsOpened(index) {
-    isOpened[index] =true;
-    CacheHelper.saveData(key:'${index}', value: true);
-
-    emit(ChangeNotificationIsOpenedState());
-  }
-
 
   void sendMessage({
     required String receiverId,
     required String dateTime,
     required String text,
     required String senderId,
+    required String patientID,
   }) {
     MessageModel model = MessageModel(
       text: text,
-      senderId:senderId,
+      senderId: senderId,
       receiverId: receiverId,
       dateTime: dateTime,
+      patientID: patientID,
     );
 
     // set my chats
@@ -668,9 +669,9 @@ class AppCubit extends Cubit<AppState> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
-      emit(SocialSendMessageSuccessState());
+      emit(SendMessageSuccessState());
     }).catchError((error) {
-      emit(SocialSendMessageErrorState(error));
+      emit(SendMessageErrorState(error));
     });
 
     // set receiver chats
@@ -682,19 +683,17 @@ class AppCubit extends Cubit<AppState> {
         .collection('messages')
         .add(model.toMap())
         .then((value) {
-      emit(SocialSendMessageSuccessState());
+      emit(SendMessageSuccessState());
     }).catchError((error) {
-      emit(SocialSendMessageErrorState(error));
+      emit(SendMessageErrorState(error));
     });
   }
-
 
   List<MessageModel> messages = [];
 
   void getMessages({
     required String receiverId,
     required String senderId,
-
   }) {
     FirebaseFirestore.instance
         .collection('admins')
@@ -711,12 +710,63 @@ class AppCubit extends Cubit<AppState> {
         messages.add(MessageModel.fromJson(element.data()));
       });
 
-      emit(SocialGetMessagesSuccessState());
+      emit(GetMessagesSuccessState());
     });
   }
 
+  List checkOutPatientList = [];
+  bool checkOutIsLoading=false;
 
+  Future<void> checkOut(
+      {required patientName,
+      required id,
+      required selectedDoctorUID,
+      required selectedNurseUID,
+      required roomNo}) async {
+
+    emit(CheckOutLoadingState());
+    checkOutIsLoading=true;
+
+    checkOutPatientList = [];
+    rooms.forEach((element) {
+      if (element.roomNo.toString() == roomNo) {
+        element.patientList!.forEach((element2) {
+          if (element2 != id) {
+            checkOutPatientList.insert(checkOutPatientList.length, element2);
+          }
+        });
+      }
+    });
+
+    await FirebaseFirestore.instance
+        .collection('patients')
+        .doc(id)
+        .delete()
+        .then((value) async {
+      await FirebaseFirestore.instance.collection('rooms').doc(roomNo).update({
+        'patientList': checkOutPatientList,
+        'roomType': 'EMPTY'
+      }).then((value) {
+        print(patientList);
+
+
+        sendNotification(
+            text: 'Patient ${patientName} Checked Out',
+            doctorUID: selectedDoctorUID,
+            nurseUID: selectedNurseUID,
+            patientId: id,
+            sendDate: DateTime.now().toString());
+        checkOutIsLoading=false;
+        getAllRooms();
+
+        emit(CheckOutSuccessState());
+      }).catchError((onError) {
+        checkOutIsLoading=false;
+
+        emit(CheckOutErrorState(onError.toString()));
+      });
+    }).catchError((onError) {
+      emit(CheckOutErrorState(onError.toString()));
+    });
+  }
 }
-
-
-
