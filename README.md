@@ -4,7 +4,7 @@
 >This application is special for hospitals and for communication between the doctor and the nurse about the patient’s condition and monitoring the health status from the moment he enters the hospital until he leaves it. It contains three interfaces, one for the admin, the doctor, and the nurse. Each of them has some features, as the admin can add the patient to the list of the doctor and nurse and log him and the doctor out.  He can monitor the condition and add some notes so that the nurse can implement them, and the nurse must constantly monitor the condition and chat with the doctor about that condition.
 
 ## Download App
-<a href="https://github.com/Ahmedshiref72/elagk_user/releases/download/v1/user.app.apk"><img src="https://playerzon.com/asset/download.png" width="200"></img></a>
+<a href="https://github.com/Ahmedshiref72/Tele-Doctor/releases/download/v1/tele.doctor.apk"><img src="https://playerzon.com/asset/download.png" width="200"></img></a>
 
 ## Screenshots
 <table width="100%">
